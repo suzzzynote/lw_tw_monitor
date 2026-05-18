@@ -18,6 +18,18 @@ PYTHON  = sys.executable
 RUN_TIMES = ["09:00", "12:00", "15:00", "18:00", "21:00"]
 
 
+def _git_push():
+    repo = Path(__file__).parent
+    try:
+        subprocess.run(["git", "add", "dashboard.html"], cwd=repo, check=True)
+        subprocess.run(["git", "commit", "-m", f"update {datetime.now():%Y-%m-%d %H:%M}"],
+                       cwd=repo, check=True)
+        subprocess.run(["git", "push"], cwd=repo, check=True)
+        print("✅ GitHub 배포 완료")
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️  git push 실패: {e}")
+
+
 def run_crawler():
     print(f"\n[{datetime.now():%Y-%m-%d %H:%M:%S}] 크롤러 실행 시작...")
     result = subprocess.run(
@@ -28,6 +40,7 @@ def run_crawler():
         print(f"⚠️  크롤러 종료 코드: {result.returncode}")
     else:
         print(f"✅ 크롤러 정상 완료")
+        _git_push()
 
 
 if __name__ == "__main__":
