@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+debug_*.html
+_check_*.py
+_debug_*.py
